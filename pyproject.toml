@@ -1,5 +1,5 @@
 [tool.poetry]
-name = "webinarru"
+name = "WebinarRu"
 version = "0.0.1"
 description = "Python client for webinar.ru platform"
 authors = ["gulyaeve <gulyaev.e@icloud.com>"]
