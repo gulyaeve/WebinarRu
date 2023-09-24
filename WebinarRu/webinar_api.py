@@ -2,8 +2,7 @@ import datetime
 from typing import Optional, Literal, Sequence
 
 from .base_api import BaseAPI
-from .models import Event, Member, EventSession, Participant, AccessSettings, CreatedEvent, \
-    CreatedEventSession, Timezone
+from .models import *
 
 
 class WebinarAPI(BaseAPI):
@@ -498,6 +497,81 @@ class WebinarAPI(BaseAPI):
             start_type=start_type,
         )
         return new_event
+
+    async def get_files(
+            self,
+            user: Optional[int] = None,
+            parent: Optional[str] = None,
+            format: Optional[str] = None,
+            is_shared: Optional[bool] = None,  # isShared
+    ) -> Sequence[File]:
+        """
+        Получить список файлов
+        :param user: ID сотрудника организации
+        :param parent: папка. Можно ограничить поиск по конкретной папке
+        :param format: расширение файла
+        :param is_shared: поиск по общей папке
+        """
+        params = {}
+        params.update({"user": user}) if user is not None else ...
+        params.update({"parent": parent}) if parent is not None else ...
+        params.update({"format": format}) if format is not None else ...
+        params.update({"isShared": "true" if is_shared else "false"}) if is_shared is not None else ...
+
+        files = await self.get_json("/fileSystem/files", params)
+        # pprint(files)
+        return [File(**file) for file in files]
+
+    async def get_event_files(
+            self,
+            event_id: int,
+            file_id: Optional[int] = None,  # fileId
+    ) -> Sequence[File]:
+        """
+        Получает список файлов, прикрепленных к серии вебинаров.
+        :param event_id: идентификатор мероприятия
+        :param file_id: ID файла
+        :return: коллекция файлов
+        """
+        params = {}
+        params.update({"fileId": file_id}) if file_id is not None else ...
+        files = await self.get_json(f"/events/{event_id}/files", params)
+        # pprint(files)
+        return [File(**file['file']) for file in files]
+
+    async def get_records(
+            self,
+            date_from: Optional[datetime.datetime] = None,  # from
+            record_id: Optional[int] = None,  # id
+            period: Optional[Literal['day', 'week', 'month', 'year']] = None,
+            date_to: Optional[datetime.datetime] = None,  # to
+            user_id: Optional[int] = None,  # userId
+            offset: Optional[int] = None,
+            limit: Optional[int] = None,
+    ) -> Sequence[File]:
+        """
+        Получить список записей
+        :param date_from: дата начала периода выборки
+        :param record_id: ID онлайн-записи
+        :param period: период выборки
+        :param date_to: дата окончания периода выборки
+        :param user_id: ID сотрудника Организации
+        :param offset: параметр для пагинации результата. Значения: 0, 10, 20, 30 и т.д.
+        :param limit: параметр для определения количества отображаемых результатов
+        :return: Коллекция записей
+        """
+        params = {}
+        params.update({"from": str(date_from)}) if date_from is not None else ...
+        params.update({"id": record_id}) if record_id is not None else ...
+        params.update({"period": period}) if period is not None else ...
+        params.update({"to": str(date_to)}) if date_to is not None else ...
+        params.update({"userId": user_id}) if user_id is not None else ...
+        params.update({"offset": offset}) if offset is not None else ...
+        params.update({"limit": limit}) if limit is not None else ...
+
+        records = await self.get_json("/records", params)
+        # pprint(records)
+        return [File(**record) for record in records]
 
     @staticmethod
     def _datetime_to_dict(title: Literal['startsAt', 'endsAt'], input_datetime: datetime.datetime) -> dict:

@@ -1,5 +1,5 @@
 import datetime
-from typing import Optional, Sequence
+from typing import Optional, Sequence, Literal
 
 from pydantic import BaseModel
 
@@ -163,3 +163,59 @@ class Timezone(BaseModel):
     name: str  # имя часового пояса (TimeZone);
     description: str  # описание часового пояса (TimeZone);
     offset: int  # смещение часового пояса в секундах;
+
+
+class File(BaseModel):
+    id: Optional[int] = None  # — идентификатор файла/папки;
+    parent: Optional[str] = None  # — папка, в которой находится файл/папка. NULL — корневая папка;
+    isDeleted: Optional[bool] = None  # — флаг удаления файла/папки. Значения:
+    # - true — файл удален;
+    # - false — файл доступен в файловом менеджере;
+    createAt: Optional[datetime.datetime] = None  # — дата создания/загрузки файла/папки;
+    name: Optional[str] = None  # — имя файла/папки;
+    type: Optional[Literal['file', 'folder']] = None  # — тип. Значения:
+    # - file — файл;
+    # - folder — папка;
+    user: Optional[Member] = None  # — владелец файла/папки;
+    organization: Optional[int] = None  # — принадлежность к Организации;
+    path: Optional[str] = None  # — относительный путь файла. В пользовательских сценариях не используется;
+    url: Optional[str] = None  # — полный путь файла;
+    downloadUrl: Optional[str] = None  # — ссылка на скачивание файла. В пользовательских сценариях не используется;
+    thumbnailUrl: Optional[str] = None  # — ссылка на миниатюру картики. В пользовательских сценариях не используется;
+    thumbnails: Optional[list | dict] = None  # — миниатюры картинок;
+    size: Optional[int] = None  # — размер файла в байтах;
+    format: Optional[str] = None  # — расширение файла;
+    isHidden: Optional[bool] = None  # — доступность файла. В пользовательских сценариях не используется;
+    isSystem: Optional[bool] = None  # — принадлежность файла системе. В пользовательских сценариях не используется;
+    mimeType: Optional[str] = None  # — MIME тип файла. В пользовательских сценариях не используется;
+    typeFile: Optional[Literal['video', 'presentation', 'slide', 'test', 'record', 'ConvertedRecord']] = None  # — тип файла.
+    uri: Optional[str] = None  # — uri файла. В пользовательских сценариях не используется;
+    thumbnailUri: Optional[str] = None  # — ссылка на миниатюру картинки. В пользовательских сценариях не используется.
+
+    duration: Optional[int] = None   # — длительность видео или теста;
+    description: Optional[str] = None   # — описание. Для видео Yotube/Vimeo:
+    src: Optional[str] = None   # — ссылка на видео;
+    author: Optional[str] = None   # — имя автора видео;
+    authorUrl: Optional[str] = None   # — канал автора на Yotube/Vimeo;
+    videoId: Optional[int] = None   # — id видео на Vimeo.
+
+    slides: Optional[list | dict] = None  # набор слайдов. Доступны после конвертации.
+
+    number: Optional[int] = None  # порядок слайда;
+    rotate: Optional[int] = None  # угол поворота.
+
+    minAnswers: Optional[int] = None  # минимальное количество ответов для того чтобы пройти тест;
+    minPoints: Optional[int] = None  # минимальное количество баллов;
+    assessType: Optional[str] = None  # определяет, по какому критерию судить прохождение теста: minAnswers или minPoints;
+    contextType: Optional[str] = None  # тест/голосование;
+    questions: Optional[str] = None  # вопросы и ответы на них, либо голосование с вариантами ответа;
+    testResult: Optional[int] = None  # файл результатов теста.
+
+    cuts: Optional[str] = None  # поле, которое показывает вырезанные отрезки видео в записи. Определяются по полям start – end;
+    password: Optional[str] = None  # пароль на запись;
+    isViewable: Optional[bool] = None  # открыта ли запись для общего доступа;
+    eventSession: Optional[EventSession] = None  # принадлежность вебинару;
+    state: Optional[str] = None  # Состояние.
+
+    convertedAt: Optional[datetime.datetime] = None  # дата конвертации;
+    progress: Optional[int] = None  # состояние конвертации в %.
