@@ -219,3 +219,19 @@ class File(BaseModel):
 
     convertedAt: Optional[datetime.datetime] = None  # дата конвертации;
     progress: Optional[int] = None  # состояние конвертации в %.
+
+
+class ChatMessage(BaseModel):
+    id: Optional[int] = None  # идентификатор сообщения;
+    authorName: Optional[str] = None  # имя автора сообщения;
+    text: Optional[str] = None  # текст сообщения;
+    isModerated: Optional[bool] = None  # флаг модерации сообщения. Зависит от настроек мероприятия, по умолчанию модерация отключена;
+    sentByAdmin: Optional[bool] = None  # отправлено ли сообщение админом мероприятия;
+    avatarUrl: Optional[str] = None  # url аватара отправителя;
+    thumbnails: Optional[list] = None  # аватар отправителя в различных разрешениях;
+    authorId: Optional[int] = None  # id отправителя.
+    createAt: Optional[datetime.datetime] = None,
+    updateAt: Optional[datetime.datetime] = None,
+    updateUserId: Optional[int] = None,
+    additionalData: Optional[str] = None,
+    attachments: Optional[Sequence] = None,

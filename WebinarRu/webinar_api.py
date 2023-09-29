@@ -498,6 +498,33 @@ class WebinarAPI(BaseAPI):
         )
         return new_event
 
+    async def get_chat_messages(
+            self,
+            event_session_id: int,  # eventsessionID
+            is_moderated: Optional[bool] = None,  # isModerated
+            limit: Optional[int] = None,
+            author_id: Optional[int] = None,  # authorId
+            private_chat: Optional[bool] = None,  # privateChat
+    ) -> Sequence[ChatMessage]:
+        """
+        Получает все сообщения из чата по eventSessionId вебинара.
+        :param event_session_id: идентификатор вебинара
+        :param is_moderated: статус модерации сообщений
+        :param limit: количество отображаемых сообщений. Значение по умолчанию: последние 100.
+        :param author_id: идентификатор пользователя, отправившего сообщение
+        :param private_chat: получить приватный чат. Параметр используется только с указанием authorId
+        :return: массив сообщений
+        """
+        params = {}
+        params.update({"isModerated": "true" if is_moderated else "false"}) if is_moderated is not None else ...
+        params.update({"limit": limit}) if limit is not None else ...
+        params.update({"author_id": author_id}) if author_id is not None else ...
+        params.update({"privateChat": "true" if private_chat else "false"}) if private_chat is not None else ...
+
+        messages = await self.get_json(f"/eventsessions/{event_session_id}/chat", params)
+        print(messages)
+        return [ChatMessage(**message) for message in messages]
+
     async def get_files(
             self,
             user: Optional[int] = None,
