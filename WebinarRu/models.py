@@ -167,17 +167,17 @@ class Timezone(BaseModel):
 
 class File(BaseModel):
     id: Optional[int] = None  # — идентификатор файла/папки;
-    parent: Optional[str] = None  # — папка, в которой находится файл/папка. NULL — корневая папка;
+    parent: Optional[str | dict] = None  # — папка, в которой находится файл/папка. NULL — корневая папка;
     isDeleted: Optional[bool] = None  # — флаг удаления файла/папки. Значения:
     # - true — файл удален;
     # - false — файл доступен в файловом менеджере;
     createAt: Optional[datetime.datetime] = None  # — дата создания/загрузки файла/папки;
     name: Optional[str] = None  # — имя файла/папки;
-    type: Optional[Literal['file', 'folder']] = None  # — тип. Значения:
+    type: Optional[Literal['file', 'folder', 'presentation', 'slide', 'test']] = None  # — тип. Значения:
     # - file — файл;
     # - folder — папка;
     user: Optional[Member] = None  # — владелец файла/папки;
-    organization: Optional[int] = None  # — принадлежность к Организации;
+    organization: Optional[int | dict] = None  # — принадлежность к Организации;
     path: Optional[str] = None  # — относительный путь файла. В пользовательских сценариях не используется;
     url: Optional[str] = None  # — полный путь файла;
     downloadUrl: Optional[str] = None  # — ссылка на скачивание файла. В пользовательских сценариях не используется;
@@ -208,7 +208,7 @@ class File(BaseModel):
     minPoints: Optional[int] = None  # минимальное количество баллов;
     assessType: Optional[str] = None  # определяет, по какому критерию судить прохождение теста: minAnswers или minPoints;
     contextType: Optional[str] = None  # тест/голосование;
-    questions: Optional[str] = None  # вопросы и ответы на них, либо голосование с вариантами ответа;
+    questions: Optional[list] = None  # вопросы и ответы на них, либо голосование с вариантами ответа;
     testResult: Optional[int] = None  # файл результатов теста.
 
     cuts: Optional[str] = None  # поле, которое показывает вырезанные отрезки видео в записи. Определяются по полям start – end;

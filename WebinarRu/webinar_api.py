@@ -522,6 +522,23 @@ class WebinarAPI(BaseAPI):
         # pprint(files)
         return [File(**file) for file in files]
 
+    async def get_file(
+            self,
+            file_id: int,  # fileID
+            name: Optional[str] = None,
+    ) -> File:
+        """
+        Получить файл по его идентификатору
+        :param file_id: Идентификатор файла
+        :param name: имя файла
+        """
+        params = {}
+        params.update({"name": name}) if name is not None else ...
+
+        file = await self.get_json(f"/fileSystem/file/{file_id}", params)
+        # print(file)
+        return File(**file)
+
     async def get_event_files(
             self,
             event_id: int,
@@ -537,6 +554,23 @@ class WebinarAPI(BaseAPI):
         params.update({"fileId": file_id}) if file_id is not None else ...
         files = await self.get_json(f"/events/{event_id}/files", params)
         # pprint(files)
+        return [File(**file['file']) for file in files]
+
+    async def get_event_session_files(
+            self,
+            event_session_id: int,  # eventsessionsID
+            file_id: Optional[int] = None,  # fileId
+    ) -> Sequence[File]:
+        """
+        Получает список файлов, прикрепленных к вебинару.
+        :param event_session_id: идентификатор вебинара
+        :param file_id: ID файла
+        :return: коллекция файлов
+        """
+        params = {}
+        params.update({"fileId": file_id}) if file_id is not None else ...
+        files = await self.get_json(f"/eventsessions/{event_session_id}/files", params)
+        print(files)
         return [File(**file['file']) for file in files]
 
     async def get_records(
