@@ -152,6 +152,9 @@ class CreatedEvent(BaseModel):
     eventId: int  # идентификатор шаблона
     link: str  # публичная ссылка на лендинг мероприятия
 
+    def __str__(self):
+        return f"{self.eventId}: {self.link}"
+
 
 class CreatedEventSession(BaseModel):
     eventSessionId: int  # идентификатор вебинара
