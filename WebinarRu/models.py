@@ -238,3 +238,64 @@ class ChatMessage(BaseModel):
     updateUserId: Optional[int] = None,
     additionalData: Optional[str] = None,
     attachments: Optional[Sequence] = None,
+
+
+class EventSessionStats(BaseModel):
+    id: Optional[int] = None  # —  идентификатор (eventsessionID);
+    name: Optional[str] = None  # — название;
+    startsAt: Optional[datetime.datetime] = None  # — дата начала мероприятия;
+    endsAt: Optional[datetime.datetime] = None  # — дата завершения мероприятия;
+    duration: Optional[int] = None   # — длительность мероприятия в секундах;
+    eventId: Optional[int] = None  # — eventID в числовом формате;
+    questionCount: Optional[int] = None  # — общее количество вопросов в вебинаре;
+    userQuestionCount: Optional[int] = None  # — количество вопросов, заданных участником;
+    chatMessageCount: Optional[int] = None  # — общее количество сообщений в чате вебинара;
+    userChatMessageCount: Optional[int] = None  # — количество сообщений в чате, написанное участником;
+    # additionalFieldValues: Optional[list, dict, str] = None  # — данные из регистрационной формы. Для каждого поля отображаются следующая информация:
+            # label — название поля;
+            # value — введенные участником данные;
+    actualInvolvement: Optional[int | str] = None  # - фактическая активность (время, которое участник был на мероприятии и не переключался на другие вкладки, другие программы, не выключал звук у ведущих);
+    speechDuration: Optional[int] = None  # — сколько в часах/минутах был активный звук от данного участника. Tсли он не был в эфире, то будет 00:00/
+    percentOfTotalSpeechDuration: Optional[int | str] = None  # — сколько времени говорил данный участник относительного общего наговоренного времени (не может быть больше 100%);
+    usersReactionClicks: Optional[int] = None  # - количество нажатий на огонёк;
+    percentOfTotalReactionClicks: Optional[int | str] = None  # - процент нажатий на огонёк данного участника, от общего количество нажатий;
+    actualParticipantActivityPercent: Optional[int | float] = None  # - процент присутствия от активного времени ведущих;
+    rating: Optional[int] = None  # - рейтинг участника;
+    # attentionControl: Optional[int] = None  # - данные модуля контроля присутствия. Для каждого из участников отображаются следующие данные:
+            # percent — процент подтверждённых окон, от общего количества.
+            # shownCount — общее количество окон подтверждения;
+            # confirmedCount — количество окон, подтверждённых участником;
+    connections: Optional[list] = None  # — все подключения участника к мероприятию. Для каждого подключения отображается следующая информация:
+            # joined — время входа;
+            # leaved — время выхода;
+            # duration — продолжительность присутствия в секундах;
+            # country — страна, из который было подключение;
+            # city — город, из которого было подключение;
+            # referrer — источник перехода;
+            # platform — устройство, с которого было подключение. Значения:
+            #         Web — компьютер;
+            #         iOs — приложение iOs;
+            #         Android — приложение Android.
+    utms: Optional[list] = None  # — массив данных о полученных utm-метках. Передаются следующие данные, если они есть:
+                    # utm_source
+                    # utm_medium
+                    # utm_campaign
+                    # utm_content
+                    # utm_term
+                    # utm_custom - все прочие метки
+
+
+class UserStats(BaseModel):
+    id: Optional[int]  # — UserID;
+    email: Optional[str] = None  # — email;
+    name: Optional[str] = None  # — имя;
+    secondName: Optional[str] = None  # — фамилия;
+    patrName: Optional[str] = None  # — отчество;
+    sex: Optional[Literal['m', 'f', 'o']] = None  # — половая принадлежность. Значения:
+    # - m — мужчина;
+    # - f — женщина;
+    # - o — не указан;
+    phone: Optional[str] = None  # — телефон;
+    organization: Optional[str] = None  # — организация, в которой работает участник;
+    position: Optional[str] = None  # — должность;
+    eventSessions: Optional[Sequence[EventSessionStats]] = None  # список вебинаров, которые посетил участник

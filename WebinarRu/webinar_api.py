@@ -1,6 +1,3 @@
-import datetime
-from typing import Optional, Literal, Sequence
-
 from .base_api import BaseAPI
 from .models import *
 
@@ -633,6 +630,28 @@ class WebinarAPI(BaseAPI):
         records = await self.get_json("/records", params)
         # pprint(records)
         return [File(**record) for record in records]
+
+    async def get_users_stats(
+            self,
+            date_from: Optional[datetime.datetime],  # from
+            date_to: Optional[datetime.datetime] = None,  # to
+            event_id: int = None,  # eventId
+    ) -> Sequence[UserStats]:
+        """
+        Возвращается массив данных о посещении мероприятий конкретными участниками.
+        Внимание! Если не указать from, то дата начала периода выборки будет равна текущей дате и времени и данные будут не валидны.
+        :return: Массив данных о посещении мероприятий
+        :param date_from: Дата начала периода выборки.
+        :param date_to: Дата окончания периода выборки. По умолчанию: from +1 год.
+        :param event_id: EventID вебинара. Позволяет получить данные о конкретном мероприятии.
+        """
+        params = {}
+        params.update({"from": str(date_from)}) if date_from is not None else ...
+        params.update({"to": str(date_to)}) if date_to is not None else ...
+        params.update({"eventId": str(event_id)}) if event_id is not None else ...
+        users_stats = await self.get_json("/stats/users", params)
+        return [UserStats(**user_stats) for user_stats in users_stats]
+
 
     @staticmethod
     def _datetime_to_dict(title: Literal['startsAt', 'endsAt'], input_datetime: datetime.datetime) -> dict:
