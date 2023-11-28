@@ -39,7 +39,8 @@ class WebinarAPI(BaseAPI):
         params.update({"position": position}) if position is not None else ...
 
         members = await self.get_json("/organization/members", params)
-        return [Member(**member) for member in members]
+        if members is not None:
+            return [Member(**member) for member in members]
 
     async def get_events_for_user(
             self,
@@ -80,7 +81,8 @@ class WebinarAPI(BaseAPI):
             f"/users/{user_id}/events/schedule",
             params=params
         )
-        return [Event(**event) for event in events]
+        if events is not None:
+            return [Event(**event) for event in events]
 
     async def get_events(
             self,
@@ -119,7 +121,8 @@ class WebinarAPI(BaseAPI):
             "/organization/events/schedule",
             params=params
         )
-        return [Event(**event) for event in events]
+        if events is not None:
+            return [Event(**event) for event in events]
 
     async def get_event_info(self, event_id: int) -> Event:
         """
@@ -128,7 +131,8 @@ class WebinarAPI(BaseAPI):
         @return: информация о мероприятии
         """
         event = await self.get_json(f"/organization/events/{event_id}")
-        return Event(**event)
+        if event is not None:
+            return Event(**event)
 
     async def get_event_participations(
             self,
@@ -149,7 +153,8 @@ class WebinarAPI(BaseAPI):
         params.update({"perPage": per_page}) if per_page is not None else ...
         params.update({"page": page}) if page is not None else ...
         participants = await self.get_json(f"/events/{event_id}/participations", params)
-        return [Participant(**participant) for participant in participants]
+        if participants is not None:
+            return [Participant(**participant) for participant in participants]
 
     async def get_event_session_info(self, event_session_id: int) -> EventSession:
         """
@@ -158,11 +163,13 @@ class WebinarAPI(BaseAPI):
         @return: информация о вебинаре
         """
         event_session = await self.get_json(f"/eventsessions/{event_session_id}")
-        return EventSession(**event_session)
+        if event_session is not None:
+            return EventSession(**event_session)
 
     async def get_timezones(self) -> Sequence[Timezone]:
         timezones = await self.get_json("/timezones")
-        return [Timezone(**timezone) for timezone in timezones]
+        if timezones is not None:
+            return [Timezone(**timezone) for timezone in timezones]
 
     async def delete_event(self, event_id: int) -> bool:
         """
@@ -171,7 +178,8 @@ class WebinarAPI(BaseAPI):
         @return: True если удаление успешно
         """
         delete_event = await self.delete(f"/organization/events/{event_id}")
-        return True if delete_event == 204 else False
+        if delete_event is not None:
+            return True if delete_event == 204 else False
 
     async def delete_event_session(
             self,
@@ -187,7 +195,8 @@ class WebinarAPI(BaseAPI):
         params = {}
         params.update({"sendEmail": "true" if send_email else "false"}) if send_email is not None else ...
         delete_event = await self.delete(f"/eventsessions/{event_session_id}", params)
-        return True if delete_event == 204 else False
+        if delete_event is not None:
+            return True if delete_event == 204 else False
 
     async def create_event(
             self,
@@ -266,7 +275,8 @@ class WebinarAPI(BaseAPI):
         data.update({"brandingId": branding_id}) if branding_id is not None else ...
 
         new_event = await self.post_json("/events", data)
-        return CreatedEvent(**new_event)
+        if new_event is not None:
+            return CreatedEvent(**new_event)
 
     async def edit_event(
             self,
@@ -322,7 +332,8 @@ class WebinarAPI(BaseAPI):
         data.update({"brandingId": branding_id}) if branding_id is not None else ...
 
         edited_event = await self.put_json(f"/events/{event_id}", data)
-        return True if edited_event == 204 else False
+        if edited_event is not None:
+            return True if edited_event == 204 else False
 
     async def create_event_session(
             self,
@@ -362,7 +373,8 @@ class WebinarAPI(BaseAPI):
         data.update({"timezone": timezone}) if timezone is not None else ...
         data.update({"image": image}) if image is not None else ...
         new_event_session = await self.post_json(f"/events/{event_id}/sessions", data)
-        return CreatedEventSession(**new_event_session)
+        if new_event_session is not None:
+            return CreatedEventSession(**new_event_session)
 
     async def edit_event_session(
             self,
@@ -414,7 +426,8 @@ class WebinarAPI(BaseAPI):
         data.update({"updateContext": update_context}) if update_context is not None else ...
 
         edited_event_session = await self.put_json(f"/eventsessions/{event_session_id}", data)
-        return True if edited_event_session == 204 else False
+        if edited_event_session is not None:
+            return True if edited_event_session == 204 else False
 
     async def create_webinar(
             self,
@@ -489,11 +502,12 @@ class WebinarAPI(BaseAPI):
             branding_id=branding_id,
         )
 
-        await self.create_event_session(
-            event_id=new_event.eventId,
-            start_type=start_type,
-        )
-        return new_event
+        if new_event is not None:
+            await self.create_event_session(
+                event_id=new_event.eventId,
+                start_type=start_type,
+            )
+            return new_event
 
     async def get_chat_messages(
             self,
@@ -519,8 +533,9 @@ class WebinarAPI(BaseAPI):
         params.update({"privateChat": "true" if private_chat else "false"}) if private_chat is not None else ...
 
         messages = await self.get_json(f"/eventsessions/{event_session_id}/chat", params)
-        print(messages)
-        return [ChatMessage(**message) for message in messages]
+        # print(messages)
+        if messages is not None:
+            return [ChatMessage(**message) for message in messages]
 
     async def get_files(
             self,
@@ -544,7 +559,8 @@ class WebinarAPI(BaseAPI):
 
         files = await self.get_json("/fileSystem/files", params)
         # pprint(files)
-        return [File(**file) for file in files]
+        if files is not None:
+            return [File(**file) for file in files]
 
     async def get_file(
             self,
@@ -561,7 +577,8 @@ class WebinarAPI(BaseAPI):
 
         file = await self.get_json(f"/fileSystem/file/{file_id}", params)
         # print(file)
-        return File(**file)
+        if file is not None:
+            return File(**file)
 
     async def get_event_files(
             self,
@@ -578,7 +595,8 @@ class WebinarAPI(BaseAPI):
         params.update({"fileId": file_id}) if file_id is not None else ...
         files = await self.get_json(f"/events/{event_id}/files", params)
         # pprint(files)
-        return [File(**file['file']) for file in files]
+        if files is not None:
+            return [File(**file['file']) for file in files]
 
     async def get_event_session_files(
             self,
@@ -594,8 +612,9 @@ class WebinarAPI(BaseAPI):
         params = {}
         params.update({"fileId": file_id}) if file_id is not None else ...
         files = await self.get_json(f"/eventsessions/{event_session_id}/files", params)
-        print(files)
-        return [File(**file['file']) for file in files]
+        # print(files)
+        if files is not None:
+            return [File(**file['file']) for file in files]
 
     async def get_records(
             self,
@@ -629,7 +648,8 @@ class WebinarAPI(BaseAPI):
 
         records = await self.get_json("/records", params)
         # pprint(records)
-        return [File(**record) for record in records]
+        if records is not None:
+            return [File(**record) for record in records]
 
     async def get_users_stats(
             self,
@@ -650,8 +670,8 @@ class WebinarAPI(BaseAPI):
         params.update({"to": str(date_to)}) if date_to is not None else ...
         params.update({"eventId": str(event_id)}) if event_id is not None else ...
         users_stats = await self.get_json("/stats/users", params)
-        return [UserStats(**user_stats) for user_stats in users_stats]
-
+        if users_stats is not None:
+            return [UserStats(**user_stats) for user_stats in users_stats]
 
     @staticmethod
     def _datetime_to_dict(title: Literal['startsAt', 'endsAt'], input_datetime: datetime.datetime) -> dict:

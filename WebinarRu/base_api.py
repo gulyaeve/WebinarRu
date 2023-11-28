@@ -21,8 +21,11 @@ class BaseAPI:
                     params=params,
                     verify_ssl=False,
                 ) as resp:
-                    logging.info(f"{resp.status} {self._link}{route} {params=}")
-                    return await resp.json()
+                    if resp.ok:
+                        logging.info(f"{resp.status} {self._link}{route} {params=}")
+                        return await resp.json()
+                    else:
+                        raise aiohttp.ClientError
         except aiohttp.ClientConnectionError:
             logging.warning(f"Api is unreachable {self._link}{route}")
         except Exception as e:
@@ -38,8 +41,11 @@ class BaseAPI:
                     params=params,
                     verify_ssl=False,
                 ) as resp:
-                    logging.info(f"{resp.status} {self._link}{route}")
-                    return await resp.read()
+                    if resp.ok:
+                        logging.info(f"{resp.status} {self._link}{route}")
+                        return await resp.read()
+                    else:
+                        raise aiohttp.ClientError
         except aiohttp.ClientConnectionError:
             logging.warning(f"Api is unreachable {self._link}{route}")
         except Exception as e:
@@ -63,8 +69,11 @@ class BaseAPI:
                     data=data,
                     verify_ssl=False,
                 ) as post:
-                    logging.info(f"{post.status=} {self._link}{route} {data=}")
-                    return await post.json()
+                    if post.ok:
+                        logging.info(f"{post.status=} {self._link}{route} {data=}")
+                        return await post.json()
+                    else:
+                        raise aiohttp.ClientError
         except aiohttp.ClientConnectionError:
             logging.warning(f"Api is unreachable {self._link}{route}")
         except Exception as e:
@@ -88,8 +97,11 @@ class BaseAPI:
                     data=data,
                     verify_ssl=False,
                 ) as put:
-                    logging.info(f"{put.status=} {self._link}{route} {data=}")
-                    return put.status
+                    if put.ok:
+                        logging.info(f"{put.status=} {self._link}{route} {data=}")
+                        return put.status
+                    else:
+                        raise aiohttp.ClientError
         except aiohttp.ClientConnectionError:
             logging.warning(f"Api is unreachable {self._link}{route}")
         except Exception as e:
@@ -105,8 +117,11 @@ class BaseAPI:
                     data=data,
                     verify_ssl=False,
                 ) as resp:
-                    logging.info(f"{resp.status} {self._link}{route} {data=}")
-                    return resp.status
+                    if resp.ok:
+                        logging.info(f"{resp.status} {self._link}{route} {data=}")
+                        return resp.status
+                    else:
+                        raise aiohttp.ClientError
         except aiohttp.ClientConnectionError:
             logging.warning(f"Api is unreachable {self._link}{route}")
         except Exception as e:
