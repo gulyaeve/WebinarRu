@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "WebinarRu"
-version = "0.0.42"
+version = "0.0.43"
 description = "Python client for webinar.ru platform"
 authors = ["gulyaeve <gulyaev.e@icloud.com>"]
 license = "MIT"
@@ -10,7 +10,7 @@ packages = [{include = "WebinarRu"}]
 [tool.poetry.dependencies]
 python = "^3.11"
 aiohttp = "^3.9.3"
-pydantic = "^2.6.1"
+pydantic = "^2.5.3"
 
 
 [build-system]
