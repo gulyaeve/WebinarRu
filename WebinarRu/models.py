@@ -53,7 +53,7 @@ class EventSessionParticipant(User):
     registerStatus: Optional[str] = None  # — статус регистрации;
     paymentStatus: Optional[str] = None  # — статус оплаты;
     registerDate: Optional[datetime.datetime] = None  # дата регистрации;
-    additionalFieldValues: Optional[list] = None # дополнительные поля из формы регистрации;
+    additionalFieldValues: Optional[list] = None  # дополнительные поля из формы регистрации;
     visited: Optional[bool] = None  # статус посещения.
 
     def __str__(self):
@@ -80,7 +80,7 @@ class AccessSettings(BaseModel):
 class EventSession(BaseModel):
     id: Optional[int] = None  # —  идентификатор (eventsessionID);
     name: Optional[str] = None  # — название;
-    description: Optional[str] = None  # —  описание;
+    description: Optional[str] = None  # — описание;
     status: Optional[str] = None  # — текущее состояние вебинара;
     accessSettings: Optional[AccessSettings | dict] = None  #
     # - isPasswordRequired — доступ с паролем, или без него
@@ -122,7 +122,7 @@ class EventSession(BaseModel):
 class Event(BaseModel):
     id: int = None  # идентификатор (EventID) в числовом формате;
     name: str = None  # название;
-    description: Optional[str] = None  # —  описание;
+    description: Optional[str] = None  # — описание;
     status: Optional[str] = None  # текущее состояние вебинара;
     accessSettings: Optional[AccessSettings] = None
     # - isPasswordRequired — доступ с паролем, или без него
@@ -205,7 +205,9 @@ class File(BaseModel):
     isHidden: Optional[bool] = None  # — доступность файла. В пользовательских сценариях не используется;
     isSystem: Optional[bool] = None  # — принадлежность файла системе. В пользовательских сценариях не используется;
     mimeType: Optional[str] = None  # — MIME тип файла. В пользовательских сценариях не используется;
-    typeFile: Optional[Literal['video', 'presentation', 'slide', 'test', 'record', 'ConvertedRecord']] = None  # — тип файла.
+    typeFile: Optional[
+        Literal['video', 'presentation', 'slide', 'test', 'record', 'ConvertedRecord']
+    ] = None  # — тип файла.
     uri: Optional[str] = None  # — uri файла. В пользовательских сценариях не используется;
     thumbnailUri: Optional[str] = None  # — ссылка на миниатюру картинки. В пользовательских сценариях не используется.
 
@@ -223,12 +225,13 @@ class File(BaseModel):
 
     minAnswers: Optional[int] = None  # минимальное количество ответов для того чтобы пройти тест;
     minPoints: Optional[int] = None  # минимальное количество баллов;
-    assessType: Optional[str] = None  # определяет, по какому критерию судить прохождение теста: minAnswers или minPoints;
+    assessType: Optional[str] = None  # по какому критерию судить прохождение теста: minAnswers или minPoints;
     contextType: Optional[str] = None  # тест/голосование;
     questions: Optional[list] = None  # вопросы и ответы на них, либо голосование с вариантами ответа;
     testResult: Optional[int] = None  # файл результатов теста.
 
-    cuts: Optional[str] = None  # поле, которое показывает вырезанные отрезки видео в записи. Определяются по полям start – end;
+    cuts: Optional[str] = None  # поле, которое показывает вырезанные отрезки видео в записи.
+    # Определяются по полям start – end;
     password: Optional[str] = None  # пароль на запись;
     isViewable: Optional[bool] = None  # открыта ли запись для общего доступа;
     eventSession: Optional[EventSession] = None  # принадлежность вебинару;
@@ -242,7 +245,8 @@ class ChatMessage(BaseModel):
     id: Optional[int] = None  # идентификатор сообщения;
     authorName: Optional[str] = None  # имя автора сообщения;
     text: Optional[str] = None  # текст сообщения;
-    isModerated: Optional[bool] = None  # флаг модерации сообщения. Зависит от настроек мероприятия, по умолчанию модерация отключена;
+    isModerated: Optional[bool] = None  # флаг модерации сообщения. Зависит от настроек мероприятия,
+    # по умолчанию модерация отключена;
     sentByAdmin: Optional[bool] = None  # отправлено ли сообщение админом мероприятия;
     avatarUrl: Optional[str] = None  # url аватара отправителя;
     thumbnails: Optional[list] = None  # аватар отправителя в различных разрешениях;
@@ -265,38 +269,48 @@ class EventSessionStats(BaseModel):
     userQuestionCount: Optional[int] = None  # — количество вопросов, заданных участником;
     chatMessageCount: Optional[int] = None  # — общее количество сообщений в чате вебинара;
     userChatMessageCount: Optional[int] = None  # — количество сообщений в чате, написанное участником;
-    # additionalFieldValues: Optional[list, dict, str] = None  # — данные из регистрационной формы. Для каждого поля отображаются следующая информация:
-            # label — название поля;
-            # value — введенные участником данные;
-    actualInvolvement: Optional[int | str] = None  # - фактическая активность (время, которое участник был на мероприятии и не переключался на другие вкладки, другие программы, не выключал звук у ведущих);
-    speechDuration: Optional[int] = None  # — сколько в часах/минутах был активный звук от данного участника. Tсли он не был в эфире, то будет 00:00/
-    percentOfTotalSpeechDuration: Optional[int | str] = None  # — сколько времени говорил данный участник относительного общего наговоренного времени (не может быть больше 100%);
+    # additionalFieldValues: Optional[list, dict, str] = None  # — данные из регистрационной формы.
+    # Для каждого поля отображаются следующая информация:
+    # label — название поля;
+    # value — введенные участником данные;
+    actualInvolvement: Optional[int | str] = None  # - фактическая активность
+    # (время, которое участник был на мероприятии и не переключался на другие вкладки, другие программы,
+    # не выключал звук у ведущих);
+    speechDuration: Optional[int] = None  # — сколько в часах/минутах был активный звук от данного участника.
+    # Если он не был в эфире, то будет 00:00/
+    percentOfTotalSpeechDuration: Optional[int | str] = None  # — сколько времени говорил данный участник
+    # относительного общего наговоренного времени (не может быть больше 100%);
     usersReactionClicks: Optional[int] = None  # - количество нажатий на огонёк;
-    percentOfTotalReactionClicks: Optional[int | str] = None  # - процент нажатий на огонёк данного участника, от общего количество нажатий;
-    actualParticipantActivityPercent: Optional[int | float] = None  # - процент присутствия от активного времени ведущих;
+    percentOfTotalReactionClicks: Optional[int | str] = None  # - процент нажатий на огонёк данного участника,
+    # от общего количество нажатий;
+    actualParticipantActivityPercent: Optional[int | float] = None  # - процент присутствия от активного времени
+    # ведущих;
     rating: Optional[int] = None  # - рейтинг участника;
-    # attentionControl: Optional[int] = None  # - данные модуля контроля присутствия. Для каждого из участников отображаются следующие данные:
-            # percent — процент подтверждённых окон, от общего количества.
-            # shownCount — общее количество окон подтверждения;
-            # confirmedCount — количество окон, подтверждённых участником;
-    connections: Optional[list] = None  # — все подключения участника к мероприятию. Для каждого подключения отображается следующая информация:
-            # joined — время входа;
-            # leaved — время выхода;
-            # duration — продолжительность присутствия в секундах;
-            # country — страна, из который было подключение;
-            # city — город, из которого было подключение;
-            # referrer — источник перехода;
-            # platform — устройство, с которого было подключение. Значения:
-            #         Web — компьютер;
-            #         iOs — приложение iOs;
-            #         Android — приложение Android.
-    utms: Optional[list] = None  # — массив данных о полученных utm-метках. Передаются следующие данные, если они есть:
-                    # utm_source
-                    # utm_medium
-                    # utm_campaign
-                    # utm_content
-                    # utm_term
-                    # utm_custom - все прочие метки
+    # attentionControl: Optional[int] = None  # - данные модуля контроля присутствия.
+    # Для каждого из участников отображаются следующие данные:
+    # percent — процент подтверждённых окон, от общего количества.
+    # shownCount — общее количество окон подтверждения;
+    # confirmedCount — количество окон, подтверждённых участником;
+    connections: Optional[list] = None  # — все подключения участника к мероприятию.
+    # Для каждого подключения отображается следующая информация:
+    # joined — время входа;
+    # leaved — время выхода;
+    # duration — продолжительность присутствия в секундах;
+    # country — страна, из которой было подключение;
+    # city — город, из которого было подключение;
+    # referrer — источник перехода;
+    # platform — устройство, с которого было подключение. Значения:
+    #         Web — компьютер;
+    #         iOs — приложение iOs;
+    #         Android — приложение Android.
+    utms: Optional[list] = None  # — массив данных о полученных utm-метках.
+    # Передаются следующие данные, если они есть:
+    # utm_source
+    # utm_medium
+    # utm_campaign
+    # utm_content
+    # utm_term
+    # utm_custom - все прочие метки
 
 
 class UserStats(BaseModel):
