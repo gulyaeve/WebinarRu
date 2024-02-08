@@ -139,7 +139,7 @@ class WebinarAPI(BaseAPI):
             event_id: int,
             per_page: Optional[Literal[10, 50, 100, 250, 500]] = None,  # perPage
             page: Optional[int] = None,
-    ) -> Sequence[Participant]:
+    ) -> Sequence[EventParticipant]:
         """
         Выгрузить статистику по серии мероприятий.
         Запрос позволяет получить информацию об участниках серии мероприятий
@@ -154,7 +154,28 @@ class WebinarAPI(BaseAPI):
         params.update({"page": page}) if page is not None else ...
         participants = await self.get_json(f"/events/{event_id}/participations", params)
         if participants is not None:
-            return [Participant(**participant) for participant in participants]
+            return [EventParticipant(**participant) for participant in participants]
+
+    async def get_event_session_participations(
+            self,
+            event_session_id: int,
+            per_page: Optional[Literal[10, 50, 100, 250, 500]] = None,  # perPage
+            page: Optional[int] = None,
+    ) -> Sequence[EventSessionParticipant]:
+        """
+        Позволяет получить информацию об участниках, зарегистрированных на мероприятие
+        с указанием факта посещения вебинара.
+        :param event_session_id: идентификатор вебинара
+        :param per_page: количество участников на одной странице
+        :param page: номер страницы
+        :rtype: коллекция участников
+        """
+        params = {}
+        params.update({"perPage": per_page}) if per_page is not None else ...
+        params.update({"page": page}) if page is not None else ...
+        participants = await self.get_json(f"/eventsessions/{event_session_id}/participations", params)
+        if participants is not None:
+            return [EventSessionParticipant(**participant) for participant in participants]
 
     async def get_event_session_info(self, event_session_id: int) -> EventSession:
         """

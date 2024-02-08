@@ -24,7 +24,7 @@ class Member(User):
     avatar: Optional[dict] = None  # — аватар с миниатюрами.
 
 
-class Participant(User):
+class EventParticipant(User):
     id: Optional[int] = None  # — уникальный идентификатор участника в вебинаре (partisipationID);
     eventId: Optional[int] = None  # — ID серии мероприятий(Event), на которую зарегистрирован пользователь.
     eventSessionId: Optional[int] = None  # —  ID сессии мероприятия(EventSession), на
@@ -41,6 +41,20 @@ class Participant(User):
     isSeen: Optional[int] = None  # — техническое поле, не используется для сотрудников.
     agreementStatus: Optional[str] = None  # — техническое поле, не используется.
     isOnline: Optional[str] = None  # — статус присутствия участия на вебинаре в данный момент.
+
+    def __str__(self):
+        return f"{self.name},{self.secondName},{self.email},{self.visited}"
+
+
+class EventSessionParticipant(User):
+    id: Optional[int] = None  # —  уникальный идентификатор (partisipationID) пользователя;
+    isAccepted: Optional[int] = None  # — статус доступа участника.
+    role: Optional[str] = None  # — роль в вебинаре. Подробнее о ролях;
+    registerStatus: Optional[str] = None  # — статус регистрации;
+    paymentStatus: Optional[str] = None  # — статус оплаты;
+    registerDate: Optional[datetime.datetime] = None  # дата регистрации;
+    additionalFieldValues: Optional[list] = None # дополнительные поля из формы регистрации;
+    visited: Optional[bool] = None  # статус посещения.
 
     def __str__(self):
         return f"{self.name},{self.secondName},{self.email},{self.visited}"
