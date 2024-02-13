@@ -211,12 +211,12 @@ class File(BaseModel):
     uri: Optional[str] = None  # — uri файла. В пользовательских сценариях не используется;
     thumbnailUri: Optional[str] = None  # — ссылка на миниатюру картинки. В пользовательских сценариях не используется.
 
-    duration: Optional[int] = None   # — длительность видео или теста;
-    description: Optional[str] = None   # — описание. Для видео Yotube/Vimeo:
-    src: Optional[str] = None   # — ссылка на видео;
-    author: Optional[str] = None   # — имя автора видео;
-    authorUrl: Optional[str] = None   # — канал автора на Yotube/Vimeo;
-    videoId: Optional[int] = None   # — id видео на Vimeo.
+    duration: Optional[int] = None  # — длительность видео или теста;
+    description: Optional[str] = None  # — описание. Для видео Yotube/Vimeo:
+    src: Optional[str] = None  # — ссылка на видео;
+    author: Optional[str] = None  # — имя автора видео;
+    authorUrl: Optional[str] = None  # — канал автора на Yotube/Vimeo;
+    videoId: Optional[int] = None  # — id видео на Vimeo.
 
     slides: Optional[list | dict] = None  # набор слайдов. Доступны после конвертации.
 
@@ -263,7 +263,7 @@ class EventSessionStats(BaseModel):
     name: Optional[str] = None  # — название;
     startsAt: Optional[datetime.datetime] = None  # — дата начала мероприятия;
     endsAt: Optional[datetime.datetime] = None  # — дата завершения мероприятия;
-    duration: Optional[int] = None   # — длительность мероприятия в секундах;
+    duration: Optional[int] = None  # — длительность мероприятия в секундах;
     eventId: Optional[int] = None  # — eventID в числовом формате;
     questionCount: Optional[int] = None  # — общее количество вопросов в вебинаре;
     userQuestionCount: Optional[int] = None  # — количество вопросов, заданных участником;
@@ -327,3 +327,80 @@ class UserStats(BaseModel):
     organization: Optional[str] = None  # — организация, в которой работает участник;
     position: Optional[str] = None  # — должность;
     eventSessions: Optional[Sequence[EventSessionStats]] = None  # список вебинаров, которые посетил участник
+
+
+class WebhookData(BaseModel):
+    eventSessionId: Optional[int] = None
+    eventSessionNewStartsAt: Optional[datetime.datetime] = None
+    eventSessionOldStartsAt: Optional[datetime.datetime] = None
+    eventUrl: Optional[str] = None
+    eventName: Optional[str] = None
+    reminderDate: Optional[datetime.datetime] = None
+    timezoneName: Optional[str] = None
+    eventStartsAt: Optional[datetime.datetime] = None
+    eventDescription: Optional[str] = None
+    recordId: Optional[int] = None
+    convertedRecordId: Optional[int] = None
+
+    def __str__(self):
+        result = ""
+        if self.eventSessionId:
+            result += f"id мероприятия: {self.eventSessionId}\n"
+        if self.eventName:
+            result += f"Название мероприятия: {self.eventName}\n"
+        if self.eventDescription:
+            result += f"Описание мероприятия: {self.eventDescription}\n"
+        if self.eventStartsAt:
+            result += f"Время начала: {self.eventStartsAt.strftime('%Y.%m.%d %H:%M')}\n"
+        if self.eventSessionNewStartsAt:
+            result += f"Новое время начала: {self.eventSessionNewStartsAt.strftime('%Y.%m.%d %H:%M')}\n"
+        if self.eventSessionOldStartsAt:
+            result += f"Старое время начала: {self.eventSessionOldStartsAt.strftime('%Y.%m.%d %H:%M')}\n"
+        if self.eventUrl:
+            result += f"Ссылка на мероприятие: {self.eventUrl}\n"
+        if self.reminderDate:
+            result += f"Дата и время напоминания: {self.reminderDate.strftime('%Y.%m.%d %H:%M')}\n"
+        if self.timezoneName:
+            result += f"Часовой пояс: {self.timezoneName}\n"
+        if self.recordId:
+            result += f"id онлайн-записи: {self.recordId}\n"
+        if self.convertedRecordId:
+            result += f"id сконвертированного файла: {self.convertedRecordId}\n"
+        return result
+
+
+class WebhookMessage(BaseModel):
+    event: Literal[
+        "eventSession.created",
+        "eventSession.startsAt.changed",
+        "event.beforeReminder.sent",
+        "eventSession.started",
+        "eventSession.users.allLeft",
+        "eventSession.ended",
+        "recordFile.ready",
+        "convertedRecord.ready",
+    ]
+    occurredAt: datetime.datetime
+    data: WebhookData
+
+    def __str__(self):
+        result = f"Получено уведомление от платформы ({self.occurredAt.strftime('%Y.%m.%d %H:%M')}):\n"
+        match self.event:
+            case "eventSession.created":
+                result += "Создано мероприятие."
+            case "eventSession.startsAt.changed":
+                result += "Дата начала мероприятия изменена."
+            case "event.beforeReminder.sent":
+                result += "Отправлено напоминание о мероприятии."
+            case "eventSession.started":
+                result += "Мероприятие началось."
+            case "eventSession.users.allLeft":
+                result += "Все участники покинули мероприятие."
+            case "eventSession.ended":
+                result += "Мероприятие завершено."
+            case "recordFile.ready":
+                result += "Онлайн-запись мероприятия готова."
+            case "convertedRecord.ready":
+                result += "Процесс конвертации завершен."
+        result += f"\n\n{str(self.data)}"
+        return result
