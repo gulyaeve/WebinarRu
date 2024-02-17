@@ -193,7 +193,7 @@ class WebinarAPI(BaseAPI):
         if participants is not None:
             return [EventSessionParticipant(**participant) for participant in participants]
 
-    async def get_event_session_info(self, event_session_id: int) -> EventSession:
+    async def get_event_session_info(self, event_session_id: int) -> Optional[EventSession]:
         """
         Получить данные о вебинаре
         @param event_session_id: идентификатор вебинара (eventsessionID)
@@ -202,6 +202,16 @@ class WebinarAPI(BaseAPI):
         event_session = await self.get_json(f"/eventsessions/{event_session_id}")
         if event_session is not None:
             return EventSession(**event_session)
+
+    async def stop_event_session(self, event_session_id: int) -> Optional[bool]:
+        """
+        Завершает мероприятие.
+        :param event_session_id: идентификатор вебинара (eventsessionID)
+        :return: True если завершение успешно
+        """
+        stop_event_session = await self.put(f"eventsessions/{event_session_id}/stop")
+        if stop_event_session is not None:
+            return True if stop_event_session == 204 else False
 
     async def get_timezones(self) -> Optional[Sequence[Timezone]]:
         timezones = await self.get_json("/timezones")
@@ -379,7 +389,7 @@ class WebinarAPI(BaseAPI):
         data.update({"ownerId": owner_id}) if owner_id is not None else ...
         data.update({"brandingId": branding_id}) if branding_id is not None else ...
 
-        edited_event = await self.put_json(f"/events/{event_id}", data)
+        edited_event = await self.put(f"/events/{event_id}", data)
         if edited_event is not None:
             return True if edited_event == 204 else False
 
@@ -480,7 +490,7 @@ class WebinarAPI(BaseAPI):
         data.update({"sendEmail": "true" if send_email else "false"}) if send_email is not None else ...
         data.update({"updateContext": update_context}) if update_context is not None else ...
 
-        edited_event_session = await self.put_json(f"/eventsessions/{event_session_id}", data)
+        edited_event_session = await self.put(f"/eventsessions/{event_session_id}", data)
         if edited_event_session is not None:
             return True if edited_event_session == 204 else False
 

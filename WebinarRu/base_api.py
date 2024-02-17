@@ -79,7 +79,7 @@ class BaseAPI:
         except Exception as e:
             logging.warning(f"Api is unreachable: {e}")
 
-    async def put_json(self, route: str, data: dict | None = None) -> int:
+    async def put(self, route: str, data: dict | None = None) -> int:
         """
         Send put request to host
         :param route: request link
