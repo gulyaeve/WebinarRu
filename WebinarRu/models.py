@@ -4,6 +4,26 @@ from typing import Optional, Sequence, Literal
 from pydantic import BaseModel
 
 
+__all__ = [
+    "User",
+    "Member",
+    "EventParticipant",
+    "EventSessionParticipant",
+    "AccessSettings",
+    "EventSession",
+    "Event",
+    "CreatedEvent",
+    "CreatedEventSession",
+    "Timezone",
+    "File",
+    "ChatMessage",
+    "EventSessionStats",
+    "UserStats",
+    "WebhookData",
+    "WebhookMessage"
+]
+
+
 class User(BaseModel):
     id: Optional[int] = None  # — UserID сотрудника организации;
     name: Optional[str] = None  # — имя сотрудника команды;

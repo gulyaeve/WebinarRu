@@ -1,9 +1,15 @@
+import datetime
 from .base_api import BaseAPI
 from .models import *
+from typing import Optional, Literal, Sequence
 
 
 class WebinarAPI(BaseAPI):
-    def __init__(self, token: str, base_link: str = "https://userapi.webinar.ru/v3"):
+    def __init__(
+            self,
+            token: str,
+            base_link: str = "https://userapi.webinar.ru/v3"
+    ):
         super().__init__(base_link)
         self.headers = {
             "x-auth-token": token,
@@ -12,14 +18,16 @@ class WebinarAPI(BaseAPI):
 
     async def get_members(
             self,
-            per_page: Optional[Literal[10, 50, 100, 250, 500]] = None,  # perPage
+            per_page: Optional[
+                Literal[10, 50, 100, 250, 500]
+            ] = None,  # perPage
             page: Optional[int] = None,
             user_id: Optional[int] = None,  # id
             role: Optional[Literal['admin', 'lecturer']] = None,
             email: Optional[str] = None,
             position: Optional[str] = None,
 
-    ) -> Sequence[Member]:
+    ) -> Optional[Sequence[Member]]:
         """
         Получить данные о сотрудниках Организации
         @param per_page: количество сотрудников на одной странице
@@ -47,7 +55,9 @@ class WebinarAPI(BaseAPI):
             user_id: int,  # userID
             date_from: Optional[datetime.datetime] = None,  # from
             name: Optional[str] = None,
-            status: Optional[Sequence[Literal['ACTIVE', 'STOP', 'START']]] = None,
+            status: Optional[
+                Sequence[Literal['ACTIVE', 'STOP', 'START']]
+            ] = None,
             date_to: Optional[datetime.datetime] = None,  # to
             access_settings: Optional[AccessSettings] = None,  # accessSettings
             access: Optional[Literal[1, 3, 4, 6, 8, 10]] = None,
@@ -97,7 +107,7 @@ class WebinarAPI(BaseAPI):
             access: Optional[Literal[1, 3, 4, 6, 8, 10]] = None,
             page: Optional[int] = None,
             per_page: Optional[Literal[10, 50, 100, 250]] = None,  # perPage
-    ) -> Sequence[Event]:
+    ) -> Optional[Sequence[Event]]:
         """
         Получить информацию о мероприятиях
         @param date_from: дата начала периода выборки
@@ -130,7 +140,7 @@ class WebinarAPI(BaseAPI):
         if events is not None:
             return [Event(**event) for event in events]
 
-    async def get_event_info(self, event_id: int) -> Event:
+    async def get_event_info(self, event_id: int) -> Optional[Event]:
         """
         Получить данные о серии (Event)
         @param event_id: идентификатор мероприятия (eventID)
@@ -145,7 +155,7 @@ class WebinarAPI(BaseAPI):
             event_id: int,
             per_page: Optional[Literal[10, 50, 100, 250, 500]] = None,  # perPage
             page: Optional[int] = None,
-    ) -> Sequence[EventParticipant]:
+    ) -> Optional[Sequence[EventParticipant]]:
         """
         Выгрузить статистику по серии мероприятий.
         Запрос позволяет получить информацию об участниках серии мероприятий
@@ -167,7 +177,7 @@ class WebinarAPI(BaseAPI):
             event_session_id: int,
             per_page: Optional[Literal[10, 50, 100, 250, 500]] = None,  # perPage
             page: Optional[int] = None,
-    ) -> Sequence[EventSessionParticipant]:
+    ) -> Optional[Sequence[EventSessionParticipant]]:
         """
         Позволяет получить информацию об участниках, зарегистрированных на мероприятие
         с указанием факта посещения вебинара.
@@ -193,12 +203,12 @@ class WebinarAPI(BaseAPI):
         if event_session is not None:
             return EventSession(**event_session)
 
-    async def get_timezones(self) -> Sequence[Timezone]:
+    async def get_timezones(self) -> Optional[Sequence[Timezone]]:
         timezones = await self.get_json("/timezones")
         if timezones is not None:
             return [Timezone(**timezone) for timezone in timezones]
 
-    async def delete_event(self, event_id: int) -> bool:
+    async def delete_event(self, event_id: int) -> Optional[bool]:
         """
         Полностью удалить серию
         @param event_id: идентификатор мероприятия (eventID)
@@ -212,7 +222,7 @@ class WebinarAPI(BaseAPI):
             self,
             event_session_id: int,
             send_email: Optional[bool] = None,  # sendEmail
-    ) -> bool:
+    ) -> Optional[bool]:
         """
         Удаляется вебинар, статистика, чат/вопросы. Удаление нельзя отменить.
         @param send_email: Рассылка писем с платформы Webinar.ru.
@@ -249,7 +259,7 @@ class WebinarAPI(BaseAPI):
             owner_id: Optional[int] = None,  # ownerId
             default_reminders_enabled: Optional[bool] = None,  # defaultRemindersEnabled
             branding_id: Optional[int] = None,  # brandingId
-    ) -> CreatedEvent:
+    ) -> Optional[CreatedEvent]:
         """
         Создать шаблон (Event). Event — техническая “оболочка” мероприятия,
         содержащая в себе его основные параметры: описание, файлы, настройки и правила повторения.
@@ -329,7 +339,7 @@ class WebinarAPI(BaseAPI):
             duration: Optional[str] = None,
             owner_id: Optional[int] = None,  # ownerId
             branding_id: Optional[int] = None,  # brandingId
-    ) -> bool:
+    ) -> Optional[bool]:
         """
         Позволяет отредактировать мероприятие Eventid. Обновлять можно только вебинары со статусом ACTIVE
         @param event_id: идентификатор мероприятия
@@ -385,7 +395,7 @@ class WebinarAPI(BaseAPI):
             starts_at: Optional[datetime.datetime] = None,  # startsAt
             timezone: Optional[int] = None,
             image: Optional[int] = None,
-    ) -> CreatedEventSession:
+    ) -> Optional[CreatedEventSession]:
         """
         Создать вебинар (Eventsession)
         @param event_id: id шаблона (EventID).
@@ -435,7 +445,7 @@ class WebinarAPI(BaseAPI):
             # additional_fields  # Coming soon
             send_email: Optional[bool] = None,  # sendEmail
             update_context: Optional[Literal['series']] = None,  # updateContext
-    ) -> bool:
+    ) -> Optional[bool]:
         """
         Запросом обновляются только данные EventSession.
         Обновлять можно только сессии со статусом ACTIVE и START
@@ -498,7 +508,7 @@ class WebinarAPI(BaseAPI):
             default_reminders_enabled: Optional[bool] = None,  # defaultRemindersEnabled
             branding_id: Optional[int] = None,  # brandingId
             start_type: Optional[Literal['manual', 'autostart', 'autowebinar']] = None,  # startType
-    ) -> CreatedEvent:
+    ) -> Optional[CreatedEvent]:
         """
         Создание шаблона и вебинара.
         @param name: Название мероприятия
@@ -568,7 +578,7 @@ class WebinarAPI(BaseAPI):
             limit: Optional[int] = None,
             author_id: Optional[int] = None,  # authorId
             private_chat: Optional[bool] = None,  # privateChat
-    ) -> Sequence[ChatMessage]:
+    ) -> Optional[Sequence[ChatMessage]]:
         """
         Получает все сообщения из чата по eventSessionId вебинара.
         :param event_session_id: идентификатор вебинара
@@ -595,7 +605,7 @@ class WebinarAPI(BaseAPI):
             parent: Optional[str] = None,
             file_format: Optional[str] = None,
             is_shared: Optional[bool] = None,  # isShared
-    ) -> Sequence[File]:
+    ) -> Optional[Sequence[File]]:
         """
         Получить список файлов
         :param user: ID сотрудника организации
@@ -618,7 +628,7 @@ class WebinarAPI(BaseAPI):
             self,
             file_id: int,  # fileID
             name: Optional[str] = None,
-    ) -> File:
+    ) -> Optional[File]:
         """
         Получить файл по его идентификатору
         :param file_id: Идентификатор файла
@@ -636,7 +646,7 @@ class WebinarAPI(BaseAPI):
             self,
             event_id: int,
             file_id: Optional[int] = None,  # fileId
-    ) -> Sequence[File]:
+    ) -> Optional[Sequence[File]]:
         """
         Получает список файлов, прикрепленных к серии вебинаров.
         :param event_id: идентификатор мероприятия
@@ -654,7 +664,7 @@ class WebinarAPI(BaseAPI):
             self,
             event_session_id: int,  # eventsessionsID
             file_id: Optional[int] = None,  # fileId
-    ) -> Sequence[File]:
+    ) -> Optional[Sequence[File]]:
         """
         Получает список файлов, прикрепленных к вебинару.
         :param event_session_id: идентификатор вебинара
@@ -677,7 +687,7 @@ class WebinarAPI(BaseAPI):
             user_id: Optional[int] = None,  # userId
             offset: Optional[int] = None,
             limit: Optional[int] = None,
-    ) -> Sequence[File]:
+    ) -> Optional[Sequence[File]]:
         """
         Получить список записей
         :param date_from: дата начала периода выборки
@@ -707,8 +717,8 @@ class WebinarAPI(BaseAPI):
             self,
             date_from: Optional[datetime.datetime],  # from
             date_to: Optional[datetime.datetime] = None,  # to
-            event_id: int = None,  # eventId
-    ) -> Sequence[UserStats]:
+            event_id: Optional[int] = None,  # eventId
+    ) -> Optional[Sequence[UserStats]]:
         """
         Возвращается массив данных о посещении мероприятий конкретными участниками.
         Внимание! Если не указать from, то дата начала периода выборки будет равна текущей дате и времени и
