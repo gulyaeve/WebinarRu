@@ -209,7 +209,7 @@ class WebinarAPI(BaseAPI):
         :param event_session_id: идентификатор вебинара (eventsessionID)
         :return: True если завершение успешно
         """
-        stop_event_session = await self.put(f"eventsessions/{event_session_id}/stop")
+        stop_event_session = await self.put(f"/eventsessions/{event_session_id}/stop")
         if stop_event_session is not None:
             return True if stop_event_session == 204 else False
 
