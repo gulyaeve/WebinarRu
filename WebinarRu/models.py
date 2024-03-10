@@ -7,8 +7,10 @@ from pydantic import BaseModel
 __all__ = [
     "User",
     "Member",
+    "Contact",
     "EventParticipant",
     "EventSessionParticipant",
+    "RegisteredParticipant",
     "AccessSettings",
     "EventSession",
     "Event",
@@ -42,6 +44,14 @@ class Member(User):
     sex: Optional[str] = None  # — половая принадлежность;
     photo: Optional[dict] = None  # — аватар с миниатюрами.
     avatar: Optional[dict] = None  # — аватар с миниатюрами.
+
+
+class Contact(User):
+    userId: Optional[int] = None  # идентификатор сотрудника организации, в чьей адресной книге найден контакт;
+    company: Optional[str] = None  # компания
+    position: Optional[str] = None  # должность в компании
+    phoneMain: Optional[str] = None  # номер телефона
+    tags: Optional[list] = None  # теги, присвоенные этому контакту
 
 
 class EventParticipant(User):
@@ -78,6 +88,12 @@ class EventSessionParticipant(User):
 
     def __str__(self):
         return f"{self.name},{self.secondName},{self.email},{self.visited}"
+
+
+class RegisteredParticipant(BaseModel):
+    participationId: Optional[int] = None
+    link: Optional[str] = None
+    contactId: Optional[int] = None
 
 
 class AccessSettings(BaseModel):

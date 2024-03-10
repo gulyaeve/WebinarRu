@@ -50,6 +50,93 @@ class WebinarAPI(BaseAPI):
         if members is not None:
             return [Member(**member) for member in members]
 
+    async def search_contacts(
+            self,
+            contact_ids: Optional[list] = None,
+            tags: Optional[list] = None,
+            contact_data: Optional[
+                dict[
+                    Literal['name', 'secondName', 'company', 'email', 'phoneMain', 'position'], str
+                ]
+            ] = None,
+            user_ids: Optional[list] = None,
+    ) -> Optional[Sequence[Contact]]:
+        """
+        Поиск контактов по различным критериям.
+        :param contact_ids: Идентификатор контакта
+        :param tags: теги контактов
+        :param contact_data: данные контактов
+        :param user_ids: массив ID пользователей. Можно передать несколько userID.
+        :return: Коллекция контактов
+        """
+        params = {}
+        params.update(self._make_massive(contact_ids, "contactIds")) if contact_ids else ...
+        params.update(self._make_massive(tags, "tags")) if tags else ...
+        params.update(self._make_data_massive(contact_data, "contactsData")) if contact_data else ...
+        params.update(self._make_massive(user_ids, "userIds")) if user_ids else ...
+        contacts = await self.get_json("/contacts/search", params)
+        if contacts is not None:
+            return [Contact(**contact) for contact in contacts]
+
+    async def register_to_event(
+            self,
+            event_id: int,
+            email: str,
+            name: str,
+            second_name: str,
+            nickname: Optional[str] = None,
+            role: Optional[Literal['ADMIN', 'LECTURER', 'GUEST']] = None,
+            is_auto_enter: Optional[bool] = None,
+            is_accepted: Optional[bool] = None,
+            send_email: Optional[bool] = None,
+            avatar: Optional[str] = None,
+            pattr_name: Optional[str] = None,
+            phone: Optional[str] = None,
+            description: Optional[str] = None,
+            organization: Optional[str] = None,
+            position: Optional[str] = None,
+            sex: Optional[str] = None,
+    ):
+        """
+        Регистрация участника.
+        :param event_id: Идентификатор серии;
+        :param email: Электронная почта участника;
+        :param name: Имя участника;
+        :param second_name: фамилия участника;
+        :param nickname: имя в чате. Никнейм пользователя, который будут видеть другие участники;
+        :param role: Роль участника на этом мероприятии;
+        :param is_auto_enter: Автовход в вебинар;
+        :param is_accepted: автоматическое одобрение участника в мероприятиях;
+        :param send_email: рассылка писем с платформы mts-link.ru;
+        :param avatar: фото участника. URL картинки;
+        :param pattr_name: отчество участника;
+        :param phone: телефон участника;
+        :param description: описание к карточке пользователя;
+        :param organization: организация участника;
+        :param position: должность участника;
+        :param sex: должность участника;
+        :return: Данные зарегистрированного участника.
+        """
+        data = {}
+        data.update({"email": email})
+        data.update({"name": name})
+        data.update({"secondName": second_name})
+        data.update({"nickname": nickname}) if nickname else ...
+        data.update({"role": role}) if role else ...
+        data.update({"isAutoEnter": is_auto_enter}) if is_auto_enter else ...
+        data.update({"isAccepted": is_accepted}) if is_accepted else ...
+        data.update({"sendEmail": send_email}) if send_email else ...
+        data.update({"avatar": avatar}) if avatar else ...
+        data.update({"pattrName": pattr_name}) if pattr_name else ...
+        data.update({"phone": phone}) if phone else ...
+        data.update({"description": description}) if description else ...
+        data.update({"organization": organization}) if organization else ...
+        data.update({"position": position}) if position else ...
+        data.update({"sex": sex}) if sex else ...
+        registered_participant = await self.post_json(f"/events/{event_id}/register")
+        if registered_participant is not None:
+            return RegisteredParticipant(**registered_participant)
+
     async def get_events_for_user(
             self,
             user_id: int,  # userID
@@ -63,7 +150,7 @@ class WebinarAPI(BaseAPI):
             access: Optional[Literal[1, 3, 4, 6, 8, 10]] = None,
             page: Optional[int] = None,
             per_page: Optional[Literal[10, 50, 100, 250]] = None,  # perPage
-    ):
+    ) -> Optional[Sequence[Event]]:
         """
         Получить данные о мероприятиях сотрудника организации
         @param user_id: идентификатор сотрудника
@@ -765,7 +852,7 @@ class WebinarAPI(BaseAPI):
     @staticmethod
     def _make_massive(collection: Sequence, label: str) -> dict:
         """
-        Используется для преобразования коллекций в словарь, совместимый с платформой
+        Используется для преобразования коллекций в массив, совместимый с платформой
         @param collection: список элементов
         @param label: ключ
         @return: словарь, совместимый с платформой
@@ -773,4 +860,17 @@ class WebinarAPI(BaseAPI):
         data = {}
         for index, item in enumerate(collection):
             data.update({f"{label}[{index}]": item})
+        return data
+
+    @staticmethod
+    def _make_data_massive(collection: dict, label: str) -> dict:
+        """
+        Используется для преобразования коллекций в массив данных, совместимый с платформой
+        @param collection: словарь элементов
+        @param label: ключ
+        @return: словарь, совместимый с платформой
+        """
+        data = {}
+        for key, item in collection.items():
+            data.update({f"{label}[{key}]": item})
         return data
