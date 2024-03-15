@@ -14,6 +14,7 @@ class BaseAPI:
     async def get_json(self, route: str, params: dict | None = None):
         if params is None:
             params = {}
+        logging.info(f"GET JSON {self._link}{route} with {params=}")
         try:
             async with aiohttp.ClientSession(headers=self.headers) as session:
                 async with session.get(
@@ -34,6 +35,7 @@ class BaseAPI:
     async def get_data(self, route: str, params: dict | None = None):
         if params is None:
             params = {}
+        logging.info(f"GET DATA {self._link}{route} with {params=}")
         try:
             async with aiohttp.ClientSession(headers=self.headers) as session:
                 async with session.get(
@@ -62,6 +64,7 @@ class BaseAPI:
         headers.update({"Content-Type": "application/x-www-form-urlencoded"})
         if data is None:
             data = {}
+        logging.info(f"Sending post request to {self._link}{route} with data: {data}")
         try:
             async with aiohttp.ClientSession(headers=headers) as session:
                 async with session.post(
@@ -90,6 +93,7 @@ class BaseAPI:
         headers.update({"Content-Type": "application/x-www-form-urlencoded"})
         if data is None:
             data = {}
+        logging.info(f"Sending PUT request to {self._link}{route} {data=}")
         try:
             async with aiohttp.ClientSession(headers=headers) as session:
                 async with session.put(
@@ -110,6 +114,7 @@ class BaseAPI:
     async def delete(self, route: str, data: dict | None = None) -> int:
         if data is None:
             data = {}
+        logging.info(f"Sending DELETE request to {self._link}{route} with data={data}")
         try:
             async with aiohttp.ClientSession(headers=self.headers) as session:
                 async with session.delete(
