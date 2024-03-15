@@ -1,4 +1,5 @@
 import logging
+from typing import Optional
 
 import aiohttp
 
@@ -11,7 +12,7 @@ class BaseAPI:
             "Accept": "*/*",
         }
 
-    async def get_json(self, route: str, params: dict | None = None):
+    async def get_json(self, route: str, params: Optional[dict] = None):
         if params is None:
             params = {}
         logging.info(f"GET JSON {self._link}{route} with {params=}")
@@ -23,7 +24,7 @@ class BaseAPI:
                     verify_ssl=False,
                 ) as resp:
                     if resp.ok:
-                        logging.info(f"{resp.status} {self._link}{route} {params=}")
+                        logging.info(f"{resp.status=} {self._link}{route} {params=}")
                         return await resp.json()
                     else:
                         raise aiohttp.ClientError
@@ -32,7 +33,7 @@ class BaseAPI:
         except Exception as e:
             logging.warning(f"Api is unreachable: {e}")
 
-    async def get_data(self, route: str, params: dict | None = None):
+    async def get_data(self, route: str, params: Optional[dict] = None):
         if params is None:
             params = {}
         logging.info(f"GET DATA {self._link}{route} with {params=}")
@@ -44,7 +45,7 @@ class BaseAPI:
                     verify_ssl=False,
                 ) as resp:
                     if resp.ok:
-                        logging.info(f"{resp.status} {self._link}{route}")
+                        logging.info(f"{resp.status=} {self._link}{route}")
                         return await resp.read()
                     else:
                         raise aiohttp.ClientError
@@ -53,7 +54,7 @@ class BaseAPI:
         except Exception as e:
             logging.warning(f"Api is unreachable: {e}")
 
-    async def post_json(self, route: str, data: dict | None = None) -> dict:
+    async def post_json(self, route: str, data: Optional[dict] = None) -> dict:
         """
         Send post request to host
         :param route: request link
@@ -82,7 +83,7 @@ class BaseAPI:
         except Exception as e:
             logging.warning(f"Api is unreachable: {e}")
 
-    async def put(self, route: str, data: dict | None = None) -> int:
+    async def put(self, route: str, data: Optional[dict] = None) -> aiohttp.ClientResponse:
         """
         Send put request to host
         :param route: request link
@@ -103,7 +104,7 @@ class BaseAPI:
                 ) as put:
                     if put.ok:
                         logging.info(f"{put.status=} {self._link}{route} {data=}")
-                        return put.status
+                        return put
                     else:
                         raise aiohttp.ClientError
         except aiohttp.ClientConnectionError:
@@ -111,7 +112,7 @@ class BaseAPI:
         except Exception as e:
             logging.warning(f"Api is unreachable: {e}")
 
-    async def delete(self, route: str, data: dict | None = None) -> int:
+    async def delete(self, route: str, data: Optional[dict] = None) -> int:
         if data is None:
             data = {}
         logging.info(f"Sending DELETE request to {self._link}{route} with data={data}")
@@ -123,7 +124,7 @@ class BaseAPI:
                     verify_ssl=False,
                 ) as resp:
                     if resp.ok:
-                        logging.info(f"{resp.status} {self._link}{route} {data=}")
+                        logging.info(f"{resp.status=} {self._link}{route} {data=}")
                         return resp.status
                     else:
                         raise aiohttp.ClientError

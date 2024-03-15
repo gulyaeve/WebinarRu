@@ -298,7 +298,7 @@ class WebinarAPI(BaseAPI):
         """
         stop_event_session = await self.put(f"/eventsessions/{event_session_id}/stop")
         if stop_event_session is not None:
-            return True if stop_event_session == 204 else False
+            return True if stop_event_session.status == 204 else False
 
     async def get_timezones(self) -> Optional[Sequence[Timezone]]:
         timezones = await self.get_json("/timezones")
@@ -478,7 +478,7 @@ class WebinarAPI(BaseAPI):
 
         edited_event = await self.put(f"/events/{event_id}", data)
         if edited_event is not None:
-            return True if edited_event == 204 else False
+            return True if edited_event.status == 204 else False
 
     async def create_event_session(
             self,
@@ -579,7 +579,7 @@ class WebinarAPI(BaseAPI):
 
         edited_event_session = await self.put(f"/eventsessions/{event_session_id}", data)
         if edited_event_session is not None:
-            return True if edited_event_session == 204 else False
+            return True if edited_event_session.status == 204 else False
 
     async def create_webinar(
             self,
