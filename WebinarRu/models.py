@@ -22,7 +22,7 @@ __all__ = [
     "ChatMessage",
     "EventSessionStats",
     "UserStats",
-    "WebhookMessageTypes",
+    "WebhookTypes",
     "WebhookData",
     "WebhookMessage"
 ]
@@ -368,7 +368,7 @@ class UserStats(BaseModel):
     eventSessions: Optional[Sequence[EventSessionStats]] = None  # список вебинаров, которые посетил участник
 
 
-class WebhookMessageTypes(Enum):
+class WebhookTypes(Enum):
     EVENT_SESSION_CREATED = "eventSession.created"
     EVENT_SESSION_STARTS_AT_CHANGED = "eventSession.startsAt.changed"
     EVENT_SESSION_BEFORE_REMINDER_SENT = "event.beforeReminder.sent"
