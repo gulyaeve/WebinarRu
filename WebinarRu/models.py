@@ -1,4 +1,5 @@
 import datetime
+from enum import Enum
 from typing import Optional, Sequence, Literal
 
 from pydantic import BaseModel
@@ -21,6 +22,7 @@ __all__ = [
     "ChatMessage",
     "EventSessionStats",
     "UserStats",
+    "WebhookMessageTypes",
     "WebhookData",
     "WebhookMessage"
 ]
@@ -364,6 +366,17 @@ class UserStats(BaseModel):
     organization: Optional[str] = None  # — организация, в которой работает участник;
     position: Optional[str] = None  # — должность;
     eventSessions: Optional[Sequence[EventSessionStats]] = None  # список вебинаров, которые посетил участник
+
+
+class WebhookMessageTypes(Enum):
+    EVENT_SESSION_CREATED = "eventSession.created"
+    EVENT_SESSION_STARTS_AT_CHANGED = "eventSession.startsAt.changed"
+    EVENT_SESSION_BEFORE_REMINDER_SENT = "event.beforeReminder.sent"
+    EVENT_SESSION_STARTED = "eventSession.started"
+    EVENT_SESSION_USERS_ALL_LEFT = "eventSession.users.allLeft"
+    EVENT_SESSION_ENDED = "eventSession.ended"
+    RECORD_FILE_READY = "recordFile.ready"
+    CONVERTED_RECORD_READY = "convertedRecord.ready"
 
 
 class WebhookData(BaseModel):
