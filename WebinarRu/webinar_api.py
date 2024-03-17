@@ -810,6 +810,72 @@ class WebinarAPI(BaseAPI):
         if records is not None:
             return [File(**record) for record in records]
 
+    async def share_online_record_by_id(
+            self,
+            record_id: int,
+            is_viewable: Optional[bool] = None,  # isViewable
+            password: Optional[str] = None,
+            view_access: Optional[Literal['owner', 'memberships', 'participants', 'all']] = None,
+    ):
+        """
+        Запросом меняются параметры записи: доступность записи по ссылке
+        :param record_id: id онлайн-записи
+        :param is_viewable: доступность записи;
+        :param password: пароль на запись;
+        :param view_access: настройка доступа для показа записи.
+        """
+        params = {}
+        params.update({"isViewable": is_viewable}) if is_viewable is not None else ...
+        params.update({"password": password}) if password is not None else ...
+        params.update({"viewAccess": view_access}) if view_access is not None else ...
+
+        await self.put(f"/records/{record_id}", params)
+
+    async def share_online_record_by_event_session_id(
+            self,
+            event_session_id: int,  # eventsessionsID
+            is_viewable: Optional[bool] = None,  # isViewable
+            password: Optional[str] = None,
+            view_access: Optional[Literal['owner', 'memberships', 'participants', 'all']] = None,
+    ):
+        """
+        Запросом меняются параметры записи: доступность записи по ссылке,
+        настройки доступа и наличие пароля на просмотр
+        :param event_session_id: Идентификатор вебинара;
+        :param is_viewable: доступность записи;
+        :param password: пароль на запись;
+        :param view_access: настройка доступа для показа записи.
+        """
+        params = {}
+        params.update({"isViewable": is_viewable}) if is_viewable is not None else ...
+        params.update({"password": password}) if password is not None else ...
+        params.update({"viewAccess": view_access}) if view_access is not None else ...
+
+        await self.put(f"/eventsessions/{event_session_id}/records", params)
+
+    async def share_online_record_by_email(
+            self,
+            record_id: int,
+    ):
+        """
+        Запросом отправляется Email-рассылка "Организатор поделился записью вебинара".
+        :param record_id: id онлайн-записи
+        """
+        await self.post_json(f"/records/{record_id}/share")
+
+    async def get_online_record_link(
+            self,
+            record_id: int,
+    ) -> Optional[str]:
+        """
+        Получить ссылку на запись по идентификатору
+        :param record_id: id онлайн-записи
+        :return: ссылка на онлайн-запись
+        """
+        record_link = (await self.get_records(record_id=record_id))[0].link
+        if record_link:
+            return record_link
+
     async def get_users_stats(
             self,
             date_from: Optional[datetime.datetime],  # from

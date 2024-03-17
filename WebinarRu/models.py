@@ -271,6 +271,7 @@ class File(BaseModel):
     password: Optional[str] = None  # пароль на запись;
     isViewable: Optional[bool] = None  # открыта ли запись для общего доступа;
     eventSession: Optional[EventSession] = None  # принадлежность вебинару;
+    link: Optional[str] = None
     state: Optional[str] = None  # Состояние.
 
     convertedAt: Optional[datetime.datetime] = None  # дата конвертации;
@@ -420,7 +421,7 @@ class WebhookMessage(BaseModel):
     data: WebhookData
 
     def __str__(self):
-        result = f"Получено уведомление от платформы ({self.occurredAt.strftime('%Y.%m.%d %H:%M')}):\n"
+        result = f"Получено уведомление от платформы ({self.occurredAt.strftime('%d.%m.%Y %H:%M')}):\n"
         match self.event:
             case "eventSession.created":
                 result += "Создано мероприятие."
