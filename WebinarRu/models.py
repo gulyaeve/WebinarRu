@@ -12,6 +12,7 @@ __all__ = [
     "EventParticipant",
     "EventSessionParticipant",
     "RegisteredParticipant",
+    "EventParticipantInvite",
     "AccessSettings",
     "EventSession",
     "Event",
@@ -96,6 +97,20 @@ class RegisteredParticipant(BaseModel):
     participationId: Optional[int] = None
     link: Optional[str] = None
     contactId: Optional[int] = None
+
+
+class EventParticipantInvite(BaseModel):
+    email: str
+    name: str
+    second_name: str
+    role: Optional[Literal['ADMIN', 'LECTURER', 'GUEST']] = None
+    avatar: Optional[str] = None
+    pattr_name: Optional[str] = None
+    phone: Optional[str] = None
+    description: Optional[str] = None
+    organization: Optional[str] = None
+    position: Optional[str] = None
+    sex: Optional[str] = None
 
 
 class AccessSettings(BaseModel):

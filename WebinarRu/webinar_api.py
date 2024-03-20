@@ -96,7 +96,7 @@ class WebinarAPI(BaseAPI):
             organization: Optional[str] = None,
             position: Optional[str] = None,
             sex: Optional[str] = None,
-    ):
+    ) -> RegisteredParticipant:
         """
         Регистрация участника.
         :param event_id: Идентификатор серии;
@@ -136,6 +136,30 @@ class WebinarAPI(BaseAPI):
         registered_participant = await self.post_json(f"/events/{event_id}/register", data)
         if registered_participant is not None:
             return RegisteredParticipant(**registered_participant)
+
+    async def invite_to_event(
+            self,
+            event_id: int,
+            users: Sequence[EventParticipantInvite],
+            is_auto_enter: Optional[bool] = None,
+            send_email: Optional[bool] = None,
+    ) -> list[RegisteredParticipant]:
+        """
+        Регистрация участников.
+        :param users: Коллекция участников
+        :param event_id: Идентификатор серии;
+        :return: Данные зарегистрированного участника.
+        """
+        data = {}
+        users = self._make_data_massive_list([user.dict() for user in users], "users")
+        data.update(users)
+        data.update({"isAutoEnter": is_auto_enter}) if is_auto_enter else ...
+        data.update({"sendEmail": send_email}) if send_email else ...
+        registered_participants = await self.post_json(f"/events/{event_id}/invite", data)
+        if registered_participants is not None:
+            return [
+                RegisteredParticipant(**registered_participant) for registered_participant in registered_participants
+            ]
 
     async def get_events_for_user(
             self,
@@ -939,4 +963,18 @@ class WebinarAPI(BaseAPI):
         data = {}
         for key, item in collection.items():
             data.update({f"{label}[{key}]": item})
+        return data
+
+    @staticmethod
+    def _make_data_massive_list(collection: list[dict], label: str) -> dict:
+        """
+        Используется для преобразования коллекций в массив данных, совместимый с платформой
+        @param collection: словарь элементов
+        @param label: ключ
+        @return: словарь, совместимый с платформой
+        """
+        data = {}
+        for index, value in enumerate(collection):
+            for key, item in value.items():
+                data.update({f"{label}[{index}][{key}]": item})
         return data
