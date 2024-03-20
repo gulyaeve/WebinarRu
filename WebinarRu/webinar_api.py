@@ -147,6 +147,8 @@ class WebinarAPI(BaseAPI):
         """
         Регистрация участников.
         :param users: Коллекция участников
+        :param is_auto_enter: Автовход в вебинар;
+        :param send_email: рассылка писем с платформы mts-link.ru;
         :param event_id: Идентификатор серии;
         :return: Данные зарегистрированного участника.
         """
@@ -969,12 +971,12 @@ class WebinarAPI(BaseAPI):
     def _make_data_massive_list(collection: list[dict], label: str) -> dict:
         """
         Используется для преобразования коллекций в массив данных, совместимый с платформой
-        @param collection: словарь элементов
+        @param collection: список словарей элементов
         @param label: ключ
         @return: словарь, совместимый с платформой
         """
         data = {}
         for index, value in enumerate(collection):
             for key, item in value.items():
-                data.update({f"{label}[{index}][{key}]": item})
+                data.update({f"{label}[{index}][{key}]": item}) if item is not None else ...
         return data
