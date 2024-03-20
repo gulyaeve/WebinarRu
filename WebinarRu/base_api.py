@@ -23,6 +23,7 @@ class BaseAPI:
                     params=params,
                     verify_ssl=False,
                 ) as resp:
+                    logging.info(f"{resp=}")
                     if resp.ok:
                         logging.info(f"{resp.status=} {self._link}{route} {params=}")
                         return await resp.json()
@@ -44,6 +45,7 @@ class BaseAPI:
                     params=params,
                     verify_ssl=False,
                 ) as resp:
+                    logging.info(f"{resp=}")
                     if resp.ok:
                         logging.info(f"{resp.status=} {self._link}{route}")
                         return await resp.read()
@@ -73,6 +75,7 @@ class BaseAPI:
                     data=data,
                     verify_ssl=False,
                 ) as post:
+                    logging.info(f"{post=}")
                     if post.ok:
                         logging.info(f"{post.status=} {self._link}{route} {data=}")
                         return await post.json()
@@ -102,6 +105,7 @@ class BaseAPI:
                     data=data,
                     verify_ssl=False,
                 ) as put:
+                    logging.info(f"{put=}")
                     if put.ok:
                         logging.info(f"{put.status=} {self._link}{route} {data=}")
                         return put
@@ -123,6 +127,7 @@ class BaseAPI:
                     data=data,
                     verify_ssl=False,
                 ) as resp:
+                    logging.info(f"{resp=}")
                     if resp.ok:
                         logging.info(f"{resp.status=} {self._link}{route} {data=}")
                         return resp.status
