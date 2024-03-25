@@ -902,6 +902,22 @@ class WebinarAPI(BaseAPI):
         if record_link:
             return record_link
 
+    async def get_events_stats(
+            self,
+            date_from: Optional[datetime.datetime] = None,
+            date_to: Optional[datetime.datetime] = None,  # to
+            user_id: Optional[int] = None,  # userId
+            event_id: Optional[int] = None,  # eventId
+    ) -> Optional[Sequence[EventStats]]:
+        params = {}
+        params.update({"from": str(date_from)}) if date_from is not None else ...
+        params.update({"to": str(date_to)}) if date_to is not None else ...
+        params.update({"userId": str(user_id)}) if user_id is not None else ...
+        params.update({"eventId": str(event_id)}) if event_id is not None else ...
+        event_stats = await self.get_json("/stats/events", params)
+        if event_stats:
+            return [EventStats(**event_stat) for event_stat in event_stats]
+
     async def get_users_stats(
             self,
             date_from: Optional[datetime.datetime],  # from

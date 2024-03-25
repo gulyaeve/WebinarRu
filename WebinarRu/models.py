@@ -17,6 +17,7 @@ __all__ = [
     "EventSession",
     "Event",
     "CreatedEvent",
+    "EventStats",
     "CreatedEventSession",
     "Timezone",
     "File",
@@ -221,6 +222,24 @@ class CreatedEvent(BaseModel):
 
     def __str__(self):
         return f"{self.eventId}: {self.link}"
+
+
+class EventStats(BaseModel):
+    id: Optional[int] = None  # — eventsessionID мероприятия;
+    name: Optional[str] = None  # — название мероприятия;
+    startsAt: Optional[datetime.datetime] = None  # — время начала мероприятия;
+    endsAt: Optional[datetime.datetime] = None  # — время окончания мероприятия;
+    duration: Optional[int] = None  # — длительность мероприятия. В секундах;
+    invitedCount: Optional[int] = None  # — количество приглашенных участников;
+    invitedVisitedCount: Optional[int] = None  # — количество приглашенных пользователей, которые посетили мероприятие;
+    registeredCount: Optional[int] = None  # — количество зарегистрированных участников.
+    registeredVisitedCount: Optional[int] = None  # — количество посетивших участников;
+    attendance: Optional[dict] = None  # — статистика по новым, постоянным, другим. Кто это такие по ссылке;
+    country: Optional[list] = None  # — распределение участников по странам и городам;
+    platform: Optional[dict] = None  # — распределение участников по устройствам.
+    utms: Optional[list] = None  # — массив данных о полученных utm-метках.
+    referrer: Optional[list] = None  # — источники перехода.
+    createUser: Optional[User] = None  # — информация о владельце мероприятия (id, имя/фамилия, email);
 
 
 class CreatedEventSession(BaseModel):

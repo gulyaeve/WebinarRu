@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "WebinarRu"
-version = "0.0.51"
+version = "0.0.52"
 description = "Python client for webinar.ru platform"
 authors = ["gulyaeve <gulyaev.e@icloud.com>"]
 license = "MIT"
