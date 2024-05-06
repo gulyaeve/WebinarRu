@@ -141,7 +141,7 @@ class EventSession(BaseModel):
     # - isRegistrationRequired — доступ с регистрацией, или без неё
     # - isModerationRequired — доступ с залом ожидания, или без него
     access: Optional[int] = None  # — (Архивный способ передачи данных) уровень доступа мероприятия;
-    additionalFields: Optional[str | dict] = None  # — информация о дополнительных регистрационных полях;
+    additionalFields: Optional[str | dict | list] = None  # — информация о дополнительных регистрационных полях;
     lang: Optional[str] = None  # — язык интерфейса мероприятия;
     startsAt: Optional[datetime.datetime] = None  # — дата начала мероприятия;
     timezoneId: Optional[int] = None  # — тайм-зона. Параметр в пользовательских сценариях не используется;
@@ -283,7 +283,7 @@ class File(BaseModel):
     uri: Optional[str] = None  # — uri файла. В пользовательских сценариях не используется;
     thumbnailUri: Optional[str] = None  # — ссылка на миниатюру картинки. В пользовательских сценариях не используется.
 
-    duration: Optional[int] = None  # — длительность видео или теста;
+    duration: Optional[int | float] = None  # — длительность видео или теста;
     description: Optional[str] = None  # — описание. Для видео Yotube/Vimeo:
     src: Optional[str] = None  # — ссылка на видео;
     author: Optional[str] = None  # — имя автора видео;
@@ -302,7 +302,7 @@ class File(BaseModel):
     questions: Optional[list] = None  # вопросы и ответы на них, либо голосование с вариантами ответа;
     testResult: Optional[int] = None  # файл результатов теста.
 
-    cuts: Optional[str] = None  # поле, которое показывает вырезанные отрезки видео в записи.
+    cuts: Optional[str | list] = None  # поле, которое показывает вырезанные отрезки видео в записи.
     # Определяются по полям start – end;
     password: Optional[str] = None  # пароль на запись;
     isViewable: Optional[bool] = None  # открыта ли запись для общего доступа;
