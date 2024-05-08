@@ -278,7 +278,7 @@ class File(BaseModel):
     isSystem: Optional[bool] = None  # — принадлежность файла системе. В пользовательских сценариях не используется;
     mimeType: Optional[str] = None  # — MIME тип файла. В пользовательских сценариях не используется;
     typeFile: Optional[
-        Literal['video', 'presentation', 'slide', 'test', 'record', 'ConvertedRecord']
+        Literal['file', 'video', 'presentation', 'slide', 'test', 'record', 'ConvertedRecord']
     ] = None  # — тип файла.
     uri: Optional[str] = None  # — uri файла. В пользовательских сценариях не используется;
     thumbnailUri: Optional[str] = None  # — ссылка на миниатюру картинки. В пользовательских сценариях не используется.

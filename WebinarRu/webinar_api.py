@@ -779,7 +779,7 @@ class WebinarAPI(BaseAPI):
         params = {}
         params.update({"fileId": file_id}) if file_id is not None else ...
         files = await self.get_json(f"/events/{event_id}/files", params)
-        # pprint(files)
+        # print(files)
         if files is not None:
             return [File(**file['file']) for file in files]
 
