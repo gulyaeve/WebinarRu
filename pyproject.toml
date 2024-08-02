@@ -4,7 +4,7 @@ version = "0.1.0"
 description = "Python client for webinar.ru (mts-link.ru) platform"
 authors = ["gulyaeve <gulyaev.e@icloud.com>"]
 license = "MIT"
-readme = "README.MD"
+readme = "README.md"
 packages = [{include = "WebinarRu"}]
 
 [tool.poetry.dependencies]
@@ -24,7 +24,7 @@ authors = [
   { name="Eugene Gulyaev", email="gulyaev.e@icloud.com" },
 ]
 description = "Python client for webinar.ru (mts-link.ru) platform"
-readme = "README.MD"
+readme = "README.md"
 requires-python = ">=3.11"
 classifiers = [
     "Programming Language :: Python :: 3",
