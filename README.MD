@@ -1,4 +1,4 @@
-# Python-клиент для платформы webinar.ru
+# Python-клиент для платформы webinar.ru (mts-link.ru)
 
 ## Клиент находится в разработке!
 
