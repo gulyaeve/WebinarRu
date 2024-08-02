@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "WebinarRu"
-version = "0.1.0"
+version = "0.1.1"
 description = "Python client for webinar.ru (mts-link.ru) platform"
 authors = ["gulyaeve <gulyaev.e@icloud.com>"]
 license = "MIT"
@@ -19,7 +19,7 @@ build-backend = "poetry.core.masonry.api"
 
 [project]
 name = "WebinarRu"
-version = "0.1.0"
+version = "0.1.1"
 authors = [
   { name="Eugene Gulyaev", email="gulyaev.e@icloud.com" },
 ]
