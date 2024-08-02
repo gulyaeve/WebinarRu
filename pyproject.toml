@@ -1,7 +1,7 @@
 [tool.poetry]
 name = "WebinarRu"
-version = "0.0.55"
-description = "Python client for webinar.ru platform"
+version = "0.1.0"
+description = "Python client for webinar.ru (mts-link.ru) platform"
 authors = ["gulyaeve <gulyaev.e@icloud.com>"]
 license = "MIT"
 readme = "README.md"
@@ -17,6 +17,23 @@ pydantic = "^2.5.3"
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
 
+[project]
+name = "WebinarRu"
+version = "0.1.0"
+authors = [
+  { name="Eugene Gulyaev", email="gulyaev.e@icloud.com" },
+]
+description = "Python client for webinar.ru (mts-link.ru) platform"
+readme = "README.md"
+requires-python = ">=3.11"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+]
+
 [project.urls]
 Homepage = "https://github.com/gulyaeve/WebinarRu"
 Repository = "https://github.com/gulyaeve/WebinarRu"
+Issues = "https://github.com/gulyaeve/WebinarRu/issues"
+
