@@ -5,6 +5,7 @@ description = "Python client for webinar.ru (mts-link.ru) platform"
 authors = ["gulyaeve <gulyaev.e@icloud.com>"]
 license = "MIT"
 readme = "README.md"
+packages = [{ include = "WebinarRu" }]
 homepage = "https://github.com/gulyaeve/WebinarRu"
 repository = "https://github.com/gulyaeve/WebinarRu"
 keywords = ["webinar", "mts-link", "WebinarRu"]
